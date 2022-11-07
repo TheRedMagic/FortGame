@@ -3,3 +3,14 @@ Host: ''
 Username: ''
 Password: ''
 Port: ''
+
+#Schematics Path
+DefaultFortPath: '/DefaultForts/defaultFort.schematic'
+SoloFortPath: '/SoloForts/'
+
+#Fort Settings
+BlocksBetweenForts: 300
+
+FortSizeX: 100.0
+FortSizeY: 100.0
+FortSizeZ: 100.0

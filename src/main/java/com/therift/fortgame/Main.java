@@ -1,7 +1,9 @@
 package com.therift.fortgame;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.ConfigData.Config.ConfigManager;
 import com.therift.fortgame.ConfigData.Database.Database;
+import com.therift.fortgame.Core.FortCreation.FortCreationListener;
 import com.therift.theriftcore.CorePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +15,8 @@ import java.io.File;
 
 public final class Main extends JavaPlugin {
 
-    private CorePlugin api;
+    private CorePlugin corePlugin;
+    private WorldEdit worldEdit;
 
     //Data
     private ConfigManager config;
@@ -22,12 +25,19 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        //CorePlugin API
-        api = (CorePlugin) Bukkit.getPluginManager().getPlugin("CorePlugin");
+        //APIS
+        corePlugin = (CorePlugin) Bukkit.getPluginManager().getPlugin("CorePlugin");
+        worldEdit = WorldEdit.getInstance();
+
 
         //Data
         config = new ConfigManager(this);
         database = new Database(this);
+
+        //Listener
+        Bukkit.getPluginManager().registerEvents(new FortCreationListener(this), this);
+
+
 
     }
 
@@ -44,4 +54,8 @@ public final class Main extends JavaPlugin {
 
     public ConfigManager getConfigManager(){return config;}
     public Database getDatabase(){return database;}
+
+    public WorldEdit getWorldEdit() {
+        return worldEdit;
+    }
 }

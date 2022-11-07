@@ -11,6 +11,17 @@ public class ConfigManager {
     private String Password;
     private String Port;
 
+    //Schematics
+    private String defaultPath;
+    private String soloFortPath;
+
+    //Fort Settings
+    private int BlocksBetweenForts;
+
+    private Double FortSizeX;
+    private Double FortSizeY;
+    private Double FortSizeZ;
+
 
     public ConfigManager(Main main) {
         this.main = main;
@@ -24,6 +35,17 @@ public class ConfigManager {
         this.Username = main.getConfig().getString("Username");
         this.Password = main.getConfig().getString("Password");
         this.Port = main.getConfig().getString("Port");
+
+        //Schematics
+        this.defaultPath = main.getConfig().getString("DefaultFortPath");
+        this.soloFortPath = main.getConfig().getString("SoloFortPath");
+
+        //Fort Settings
+        this.BlocksBetweenForts = main.getConfig().getInt("BlocksBetweenForts");
+
+        this.FortSizeX = main.getConfig().getDouble("FortSizeX");
+        this.FortSizeY = main.getConfig().getDouble("FortSizeY");
+        this.FortSizeZ = main.getConfig().getDouble("FortSizeZ");
 
     }
 
@@ -41,5 +63,27 @@ public class ConfigManager {
 
     public String getUsername() {
         return Username;
+    }
+
+    public String getDefaultFortPath() {
+        return defaultPath;
+    }
+
+    public int getBlocksBetweenForts() {
+        return BlocksBetweenForts;
+    }
+
+    public Double getFortSizeX() {
+        return FortSizeX;
+    }
+    public Double getFortSizeY() {
+        return FortSizeY;
+    }
+    public Double getFortSizeZ() {
+        return FortSizeZ;
+    }
+
+    public String getSoloFortPath() {
+        return soloFortPath;
     }
 }

@@ -14,6 +14,6 @@ public class FortCreationListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
-
+        new FortCreation().onJoin(e);
     }
 }

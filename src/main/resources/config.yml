@@ -5,8 +5,8 @@ Password: ''
 Port: ''
 
 #Schematics Path
-DefaultFortPath: '/DefaultForts/defaultFort.schematic'
-SoloFortPath: '/SoloForts/'
+DefaultFortPath: '/Forts/DefaultForts/defaultFort.schem'
+SoloFortPath: '/Forts/SoloForts/'
 
 #Fort Settings
 BlocksBetweenForts: 300

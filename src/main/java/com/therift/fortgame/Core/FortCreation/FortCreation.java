@@ -122,6 +122,8 @@ public class FortCreation {
             throw new RuntimeException(e);
         }
 
+        FortLocations.remove(uuid);
+
     }
 
 }

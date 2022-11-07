@@ -4,4 +4,4 @@ main: com.therift.fortgame.Main
 api-version: 1.19
 authors: [ TheRift ]
 description: A minigame form TheRift Server
-depend: [WorldEdit]
+depend: [WorldEdit, TheRiftCore]

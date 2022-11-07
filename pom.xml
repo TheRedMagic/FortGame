@@ -99,6 +99,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -126,6 +130,11 @@
             <artifactId>worldedit-core</artifactId>
             <version>7.2.12-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.TheRedMagic</groupId>
+            <artifactId>TheRiftCore</artifactId>
+            <version>fcdb06c508</version>
         </dependency>
     </dependencies>
 </project>

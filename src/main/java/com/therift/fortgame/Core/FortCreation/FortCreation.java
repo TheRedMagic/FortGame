@@ -1,7 +1,6 @@
 package com.therift.fortgame.Core.FortCreation;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
@@ -12,7 +11,6 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.world.DataException;
 import com.sk89q.worldedit.world.World;
 import com.therift.fortgame.ConfigData.Database.PlayerManager;
 import com.therift.fortgame.Main;
@@ -32,15 +30,21 @@ public class FortCreation {
     private Main main;
     private HashMap<UUID, Location> FortLocations = new HashMap<>();
 
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e, Main main){
+        this.main = main;
         PlayerManager playerManager = new PlayerManager(main, e.getPlayer().getUniqueId());
-        if (playerManager.getSoloStructerName().equals("0")){
-            CreateSoloFort(e.getPlayer().getUniqueId(), playerManager, true);
-        }
+
+        //Checks IF player have a save
+            if (playerManager.getSoloStructerName().equals("0")){
+                //Creates a Solo Fort
+                CreateSoloFort(e.getPlayer().getUniqueId(), true);
+            }
     }
 
-    private void CreateSoloFort(UUID uuid, PlayerManager playerManager, boolean newFort){
+    private void CreateSoloFort(UUID uuid, boolean newFort){
         RiftPlayer player = new RiftPlayer(uuid);
+
+        World world = main.getWorldEdit().newEditSessionBuilder().getWorld();
 
         Location spawnLocation = new Location(player.getWorld(), 0, 0, 10000);
         Boolean foundSpot = false;
@@ -69,7 +73,7 @@ public class FortCreation {
             throw new RuntimeException(e);
         }
 
-        try (EditSession editSession = main.getWorldEdit().newEditSession((World) player.getWorld())) {
+        try (EditSession editSession = main.getWorldEdit().newEditSession(world)) {
             Operation operation = (Operation) new ClipboardHolder(clipboard)
                     .createPaste(editSession)
                     .to(BlockVector3.at(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()))
@@ -80,10 +84,13 @@ public class FortCreation {
         }
 
         FortLocations.put(player.getUuid(), spawnLocation);
+        player.teleport(spawnLocation);
 
     }
 
     private void saveFort(Location FortLocation, org.bukkit.World world, UUID uuid){
+
+        World world1 = main.getWorldEdit().newEditSessionBuilder().getWorld();
 
         Double SecondLocX = FortLocation.getX()+main.getConfigManager().getFortSizeX();
         Double SecondLocY = FortLocation.getY()+main.getConfigManager().getFortSizeY();
@@ -97,7 +104,7 @@ public class FortCreation {
 
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
-        try(EditSession editSession = WorldEdit.getInstance().newEditSession((World) world)){
+        try(EditSession editSession = WorldEdit.getInstance().newEditSession(world1)){
             ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
                     editSession, region, clipboard, region.getMinimumPoint()
             );

@@ -4,18 +4,14 @@ import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.ConfigData.Config.ConfigManager;
 import com.therift.fortgame.ConfigData.Database.Database;
 import com.therift.fortgame.Core.FortCreation.FortCreationListener;
-import com.therift.theriftcore.CorePlugin;
+import com.therift.theriftcore.TheRiftCore;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.structure.Structure;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 
 public final class Main extends JavaPlugin {
 
-    private CorePlugin corePlugin;
+    private TheRiftCore riftCore;
     private WorldEdit worldEdit;
 
     //Data
@@ -26,7 +22,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
 
         //APIS
-        corePlugin = (CorePlugin) Bukkit.getPluginManager().getPlugin("CorePlugin");
+        riftCore = (TheRiftCore) Bukkit.getPluginManager().getPlugin("TheRiftCore");
         worldEdit = WorldEdit.getInstance();
 
 

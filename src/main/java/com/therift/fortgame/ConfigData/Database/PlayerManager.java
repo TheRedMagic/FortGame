@@ -3,8 +3,8 @@ package com.therift.fortgame.ConfigData.Database;
 import com.therift.fortgame.Main;
 import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ public class PlayerManager {
         this.main = main;
         this.uuid = uuid;
 
-        RiftPlayer player = new RiftPlayer(uuid);
+        Player player = Bukkit.getPlayer(uuid);
 
         try {
             PreparedStatement ps = main.getDatabase().getConnection().prepareStatement("SELECT * FROM PlayerData WHERE UUID = ?");
@@ -32,11 +32,13 @@ public class PlayerManager {
                 this.username = rs.getString("Username");
                 this.SoloStructerName = rs.getString("SoloStructurName");
             }else {
-                PreparedStatement preparedStatement = main.getDatabase().getConnection().prepareStatement("INSERT INTO PLayerData (UUID, Username, SoloStructurName) VALUES (?,?,?)");
+                PreparedStatement preparedStatement = main.getDatabase().getConnection().prepareStatement("INSERT INTO PlayerData (UUID, Username, SoloStructurName) VALUES (?,?,?)");
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.setString(2, player.getName());
                 preparedStatement.setString(3, "0");
                 preparedStatement.executeUpdate();
+                this.username = player.getName();
+                this.SoloStructerName = "0";
             }
         }catch (SQLException e){
             throw new RuntimeException(e);

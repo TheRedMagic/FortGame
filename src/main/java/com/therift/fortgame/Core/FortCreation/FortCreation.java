@@ -34,7 +34,7 @@ public class FortCreation {
         this.main = main;
         PlayerManager playerManager = new PlayerManager(main, e.getPlayer().getUniqueId());
 
-        //Checks IF player have a save
+        //Checks if player have a save
             if (playerManager.getSoloStructerName().equals("0")){
                 //Creates a Solo Fort
                 CreateSoloFort(e.getPlayer().getUniqueId(), true);
@@ -74,11 +74,11 @@ public class FortCreation {
         }
 
         try (EditSession editSession = main.getWorldEdit().newEditSession(world)) {
-            Operation operation = (Operation) new ClipboardHolder(clipboard)
+            com.sk89q.worldedit.function.operation.Operation operation = new ClipboardHolder(clipboard)
                     .createPaste(editSession)
                     .to(BlockVector3.at(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()))
                     .build();
-            Operations.complete((com.sk89q.worldedit.function.operation.Operation) operation);
+            Operations.complete(operation);
         } catch (WorldEditException e) {
             throw new RuntimeException(e);
         }

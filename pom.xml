@@ -131,10 +131,5 @@
             <version>7.2.12-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.TheRedMagic</groupId>
-            <artifactId>TheRiftCore</artifactId>
-            <version>fcdb06c508</version>
-        </dependency>
     </dependencies>
 </project>

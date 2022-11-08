@@ -3,6 +3,7 @@ package com.therift.fortgame.Core.FortCreation;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
@@ -31,11 +32,13 @@ public class FortCreation {
     private HashMap<UUID, Location> FortLocations = new HashMap<>();
 
     public void onJoin(PlayerJoinEvent e, Main main){
+        System.out.println("Join event ran");
         this.main = main;
         PlayerManager playerManager = new PlayerManager(main, e.getPlayer().getUniqueId());
 
         //Checks if player have a save
             if (playerManager.getSoloStructerName().equals("0")){
+                System.out.println("Player doesn't have save");
                 //Creates a Solo Fort
                 CreateSoloFort(e.getPlayer().getUniqueId(), true);
             }
@@ -44,7 +47,7 @@ public class FortCreation {
     private void CreateSoloFort(UUID uuid, boolean newFort){
         RiftPlayer player = new RiftPlayer(uuid);
 
-        World world = main.getWorldEdit().newEditSessionBuilder().getWorld();
+        World world = BukkitAdapter.adapt(player.getWorld());
 
         Location spawnLocation = new Location(player.getWorld(), 0, 0, 10000);
         Boolean foundSpot = false;
@@ -80,7 +83,7 @@ public class FortCreation {
                     .build();
             Operations.complete(operation);
         } catch (WorldEditException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         FortLocations.put(player.getUuid(), spawnLocation);

@@ -18,9 +18,12 @@ import com.therift.fortgame.ConfigData.Database.PlayerManager;
 import com.therift.fortgame.Main;
 import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.*;
 import java.util.HashMap;
@@ -32,7 +35,6 @@ public class FortCreation {
     private HashMap<UUID, Location> FortLocations = new HashMap<>();
 
     public void onJoin(PlayerJoinEvent e, Main main){
-        System.out.println("Join event ran");
         Bukkit.getScheduler().runTaskLater(main, () -> {
             this.main = main;
             PlayerManager playerManager = new PlayerManager(main, e.getPlayer().getUniqueId());
@@ -42,19 +44,34 @@ public class FortCreation {
             //-----------------------------------
 
             if (playerManager.getSoloStructerName().equals("0")){
-                System.out.println("Player doesn't have save");
-
+                System.out.println("a");
                 //-----------------------------------
                 //Player doesn't have a fort | Creating a new fort
                 //-----------------------------------
 
                 CreateSoloFort(e.getPlayer().getUniqueId(), true);
+            }else {
+                System.out.println("b");
+                //-----------------------------------
+                //Player Has a save
+                //-----------------------------------
+
+                CreateSoloFort(e.getPlayer().getUniqueId(), false);
             }
         }, 2);
     }
 
+    public void onLeave(PlayerQuitEvent e){
+        //-----------------------------------
+        //  Checks if player has fort loaded
+        //-----------------------------------
+        if (FortLocations.containsKey(e.getPlayer().getUniqueId())){
+            saveFort(FortLocations.get(e.getPlayer().getUniqueId()), e.getPlayer().getWorld(), e.getPlayer().getUniqueId());
+        }
+    }
+
     private void CreateSoloFort(UUID uuid, boolean newFort){
-        RiftPlayer player = new RiftPlayer(uuid);
+        Player player = Bukkit.getPlayer(uuid);
 
         World world = BukkitAdapter.adapt(player.getWorld());
 
@@ -69,7 +86,8 @@ public class FortCreation {
 
         while (!foundSpot){
             Location location = new Location(player.getWorld(), 0, 100, main.getConfigManager().getBlocksBetweenForts()*amount);
-            if (location.getBlock().getType() != Material.AIR){
+            System.out.println(location.getY()-2 + "|" + location.getZ());
+            if (location.subtract(0, 2, 0).getBlock().getType() == Material.AIR){
                 spawnLocation = location;
                 foundSpot = true;
             }
@@ -77,15 +95,37 @@ public class FortCreation {
         }
 
 
-        File defaultSchematic = new File(main.getDataFolder() + main.getConfigManager().getDefaultFortPath());
+        //-----------------------------------
+        //  Check if it is a new fort or not
+        //-----------------------------------
+        File fortFile;
+        if (newFort) {
+            File defaultSchematic = new File(main.getDataFolder() + main.getConfigManager().getDefaultFortPath());
+            fortFile = defaultSchematic;
+            spawnLocation.add(0, 1, 0);
+        }else {
+            File saveSchematic = new File(main.getDataFolder() + main.getConfigManager().getSoloFortPath() + uuid + "_fort.schem");
+            fortFile = saveSchematic;
+
+            if (!fortFile.exists()){
+                player.kickPlayer(ChatColor.RED + "Can't find your fort\nPlease try again");
+            }else {
+                System.out.println("Found File");
+            }
+        }
+
+
+
+        player.teleport(spawnLocation);
 
         //-----------------------------------
         //Loading Schematic
         //-----------------------------------
 
-        ClipboardFormat format = ClipboardFormats.findByFile(defaultSchematic);
-        try (ClipboardReader reader = format.getReader(new FileInputStream(defaultSchematic))){
+        ClipboardFormat format = ClipboardFormats.findByFile(fortFile);
+        try (ClipboardReader reader = format.getReader(new FileInputStream(fortFile))){
             Clipboard clipboard = reader.read();
+            System.out.println(clipboard.getRegion().getHeight() + "|" + clipboard.getRegion().getWidth() + "|" + clipboard.getRegion().getLength());
 
             //-----------------------------------
             //Pasting Schematic
@@ -99,7 +139,7 @@ public class FortCreation {
                         .build();
                 Operations.complete(operation);
             } catch (WorldEditException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
 
@@ -111,43 +151,59 @@ public class FortCreation {
 
 
 
-        FortLocations.put(player.getUuid(), spawnLocation);
-        player.teleport(spawnLocation);
+        FortLocations.put(uuid, spawnLocation);
+
 
     }
 
     private void saveFort(Location FortLocation, org.bukkit.World world, UUID uuid){
 
-        World world1 = main.getWorldEdit().newEditSessionBuilder().getWorld();
+        World world1 = BukkitAdapter.adapt(world);
 
+        //-----------------------------------
+        //      Getting second Location
+        //-----------------------------------
         Double SecondLocX = FortLocation.getX()+main.getConfigManager().getFortSizeX();
         Double SecondLocY = FortLocation.getY()+main.getConfigManager().getFortSizeY();
         Double SecondLocZ = FortLocation.getZ()+main.getConfigManager().getFortSizeZ();
 
-        CuboidRegion region = new CuboidRegion(BlockVector3.at(
-                FortLocation.getX(),
-                FortLocation.getY(),
-                FortLocation.getZ()),
-                BlockVector3.at(SecondLocX, SecondLocY, SecondLocZ));
+        Double y = FortLocation.getY()-1.0;
+
+        System.out.println(FortLocation.getX() + "|" + y + "|" + FortLocation.getZ());
+        System.out.println(SecondLocX + "|" + SecondLocY + "|" + SecondLocZ);
+
+
+        //-----------------------------------
+        //          Getting region
+        //-----------------------------------
+        CuboidRegion region = new CuboidRegion(world1 ,BlockVector3.at(FortLocation.getX(), FortLocation.getY()-1.0, FortLocation.getZ()), BlockVector3.at(SecondLocX, SecondLocY, SecondLocZ));
+        System.out.println(region.getPos1().getX() + " " + region.getPos1().getY() + " " + region.getPos1().getZ());
+        System.out.println(region.getPos2().getX() + " " + region.getPos2().getY() + " " + region.getPos2().getZ());
 
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
-        try(EditSession editSession = WorldEdit.getInstance().newEditSession(world1)){
-            ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
-                    editSession, region, clipboard, region.getMinimumPoint()
-            );
-            forwardExtentCopy.setCopyingEntities(true);
-            try {
-                Operations.complete(forwardExtentCopy);
-            } catch (WorldEditException e) {
-                throw new RuntimeException(e);
-            }
+        //-----------------------------------
+        //    Saving schematic to clipboard
+        //-----------------------------------
+
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1);
+
+        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, clipboard, region.getMinimumPoint());
+        forwardExtentCopy.setCopyingEntities(true);
+
+        try {
+            Operations.complete(forwardExtentCopy);
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
         }
 
-        File file = new File(main.getDataFolder() + File.separator + main.getConfigManager().getSoloFortPath() + uuid.toString() + "_fort.schematic");
-        if (file.exists()){
-            file.delete();
-        }
+
+        //-----------------------------------
+        //          Saving Schematic
+        //-----------------------------------
+        File file = new File(main.getDataFolder() + main.getConfigManager().getSoloFortPath() + uuid.toString() + "_fort.schem");
+
+        if (file.exists()){file.delete();}
 
         try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);
@@ -158,6 +214,8 @@ public class FortCreation {
         }
 
         FortLocations.remove(uuid);
+        PlayerManager pl  = new PlayerManager(main, uuid);
+        pl.setSoloStructureName(uuid + "_fort.schem");
 
     }
 

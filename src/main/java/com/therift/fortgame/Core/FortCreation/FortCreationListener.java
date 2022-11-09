@@ -1,15 +1,24 @@
 package com.therift.fortgame.Core.FortCreation;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class FortCreationListener implements Listener {
     private Main main;
 
+    private FortCreation fortCreation;
+
     public FortCreationListener(Main main){
         this.main = main;
+
+        //-----------------------------------
+        //      Getting Instance
+        //-----------------------------------
+        fortCreation = new FortCreation();
     }
 
     @EventHandler
@@ -17,6 +26,14 @@ public class FortCreationListener implements Listener {
         //-----------------------------------
         //         Loads Fort
         //-----------------------------------
-        new FortCreation().onJoin(e, main);
+        fortCreation.onJoin(e, main);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        //-----------------------------------
+        //          Saves Fort
+        //-----------------------------------
+        fortCreation.onLeave(e);
     }
 }

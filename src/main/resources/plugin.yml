@@ -5,3 +5,7 @@ api-version: 1.19
 authors: [ TheRift ]
 description: A minigame form TheRift Server
 depend: [WorldEdit, TheRiftCore]
+commands:
+  ForceSave:
+    permission: "fortgame.forcesave"
+    description: "Save the giving fort"

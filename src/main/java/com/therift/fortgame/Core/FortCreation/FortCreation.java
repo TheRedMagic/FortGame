@@ -44,14 +44,12 @@ public class FortCreation {
             //-----------------------------------
 
             if (playerManager.getSoloStructerName().equals("0")){
-                System.out.println("a");
                 //-----------------------------------
                 //Player doesn't have a fort | Creating a new fort
                 //-----------------------------------
 
                 CreateSoloFort(e.getPlayer().getUniqueId(), true);
             }else {
-                System.out.println("b");
                 //-----------------------------------
                 //Player Has a save
                 //-----------------------------------
@@ -66,11 +64,11 @@ public class FortCreation {
         //  Checks if player has fort loaded
         //-----------------------------------
         if (FortLocations.containsKey(e.getPlayer().getUniqueId())){
-            saveFort(FortLocations.get(e.getPlayer().getUniqueId()), e.getPlayer().getWorld(), e.getPlayer().getUniqueId());
+            saveFort(e.getPlayer().getUniqueId());
         }
     }
 
-    private void CreateSoloFort(UUID uuid, boolean newFort){
+    public void CreateSoloFort(UUID uuid, boolean newFort){
         Player player = Bukkit.getPlayer(uuid);
 
         World world = BukkitAdapter.adapt(player.getWorld());
@@ -81,12 +79,11 @@ public class FortCreation {
 
 
         //-----------------------------------
-        //Finding Fort location
+        //      Finding Fort location
         //-----------------------------------
 
         while (!foundSpot){
             Location location = new Location(player.getWorld(), 0, 100, main.getConfigManager().getBlocksBetweenForts()*amount);
-            System.out.println(location.getY()-2 + "|" + location.getZ());
             if (location.subtract(0, 2, 0).getBlock().getType() == Material.AIR){
                 spawnLocation = location;
                 foundSpot = true;
@@ -109,8 +106,6 @@ public class FortCreation {
 
             if (!fortFile.exists()){
                 player.kickPlayer(ChatColor.RED + "Can't find your fort\nPlease try again");
-            }else {
-                System.out.println("Found File");
             }
         }
 
@@ -125,7 +120,6 @@ public class FortCreation {
         ClipboardFormat format = ClipboardFormats.findByFile(fortFile);
         try (ClipboardReader reader = format.getReader(new FileInputStream(fortFile))){
             Clipboard clipboard = reader.read();
-            System.out.println(clipboard.getRegion().getHeight() + "|" + clipboard.getRegion().getWidth() + "|" + clipboard.getRegion().getLength());
 
             //-----------------------------------
             //Pasting Schematic
@@ -156,9 +150,21 @@ public class FortCreation {
 
     }
 
-    private void saveFort(Location FortLocation, org.bukkit.World world, UUID uuid){
+    public void saveFort(UUID uuid){
+
+        //-----------------------------------
+        //          Default Var
+        //-----------------------------------
+
+        Player player = Bukkit.getPlayer(uuid);
+
+        org.bukkit.World world = player.getWorld();
+        Location FortLocation = FortLocations.get(uuid);
+
 
         World world1 = BukkitAdapter.adapt(world);
+
+
 
         //-----------------------------------
         //      Getting second Location
@@ -167,18 +173,11 @@ public class FortCreation {
         Double SecondLocY = FortLocation.getY()+main.getConfigManager().getFortSizeY();
         Double SecondLocZ = FortLocation.getZ()+main.getConfigManager().getFortSizeZ();
 
-        Double y = FortLocation.getY()-1.0;
-
-        System.out.println(FortLocation.getX() + "|" + y + "|" + FortLocation.getZ());
-        System.out.println(SecondLocX + "|" + SecondLocY + "|" + SecondLocZ);
-
 
         //-----------------------------------
         //          Getting region
         //-----------------------------------
         CuboidRegion region = new CuboidRegion(world1 ,BlockVector3.at(FortLocation.getX(), FortLocation.getY()-1.0, FortLocation.getZ()), BlockVector3.at(SecondLocX, SecondLocY, SecondLocZ));
-        System.out.println(region.getPos1().getX() + " " + region.getPos1().getY() + " " + region.getPos1().getZ());
-        System.out.println(region.getPos2().getX() + " " + region.getPos2().getY() + " " + region.getPos2().getZ());
 
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
@@ -201,7 +200,7 @@ public class FortCreation {
         //-----------------------------------
         //          Saving Schematic
         //-----------------------------------
-        File file = new File(main.getDataFolder() + main.getConfigManager().getSoloFortPath() + uuid.toString() + "_fort.schem");
+        File file = new File(main.getDataFolder() + main.getConfigManager().getSoloFortPath() + uuid + "_fort.schem");
 
         if (file.exists()){file.delete();}
 

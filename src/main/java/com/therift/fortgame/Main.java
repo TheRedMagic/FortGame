@@ -3,15 +3,16 @@ package com.therift.fortgame;
 import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.ConfigData.Config.ConfigManager;
 import com.therift.fortgame.ConfigData.Database.Database;
+import com.therift.fortgame.Core.FortCreation.Commands.ForceSave;
 import com.therift.fortgame.Core.FortCreation.FortCreationListener;
 import com.therift.theriftcore.TheRiftCore;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
     private TheRiftCore riftCore;
+    private FortCreationListener fortCreationListener;
     private WorldEdit worldEdit;
 
     //-----------------------------------
@@ -45,9 +46,13 @@ public final class Main extends JavaPlugin {
         //              Listener
         //-----------------------------------
 
-        Bukkit.getPluginManager().registerEvents(new FortCreationListener(this), this);
+        fortCreationListener = new FortCreationListener(this);
 
 
+        //-----------------------------------
+        //          Commands
+        //-----------------------------------
+        getCommand("ForceSave").setExecutor(new ForceSave(this));
 
     }
 
@@ -64,8 +69,7 @@ public final class Main extends JavaPlugin {
 
     public ConfigManager getConfigManager(){return config;}
     public Database getDatabase(){return database;}
-
-    public WorldEdit getWorldEdit() {
-        return worldEdit;
+    public FortCreationListener getFortCreationListener() {
+        return fortCreationListener;
     }
 }

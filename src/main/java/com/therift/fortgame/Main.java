@@ -14,23 +14,37 @@ public final class Main extends JavaPlugin {
     private TheRiftCore riftCore;
     private WorldEdit worldEdit;
 
-    //Data
+    //-----------------------------------
+    //          Data Var
+    //-----------------------------------
     private ConfigManager config;
     private Database database;
 
     @Override
     public void onEnable() {
 
-        //APIS
+        //-----------------------------------
+        //              API's
+        //-----------------------------------
+
         riftCore = (TheRiftCore) Bukkit.getPluginManager().getPlugin("TheRiftCore");
         worldEdit = WorldEdit.getInstance();
 
 
-        //Data
+
+        //-----------------------------------
+        //              Data
+        //-----------------------------------
+
         config = new ConfigManager(this);
         database = new Database(this);
 
-        //Listener
+
+
+        //-----------------------------------
+        //              Listener
+        //-----------------------------------
+
         Bukkit.getPluginManager().registerEvents(new FortCreationListener(this), this);
 
 
@@ -40,9 +54,9 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
 
-
-
-        //Database Disconnection
+        //-----------------------------------
+        //      Database Disconnection
+        //-----------------------------------
         if (database.isConnected()){
             database.disconnect();
         }

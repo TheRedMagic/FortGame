@@ -14,6 +14,9 @@ public class FortCreationListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
+        //-----------------------------------
+        //         Loads Fort
+        //-----------------------------------
         new FortCreation().onJoin(e, main);
     }
 }

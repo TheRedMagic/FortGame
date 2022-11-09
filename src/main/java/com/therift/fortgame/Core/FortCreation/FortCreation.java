@@ -8,6 +8,7 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -16,7 +17,6 @@ import com.sk89q.worldedit.world.World;
 import com.therift.fortgame.ConfigData.Database.PlayerManager;
 import com.therift.fortgame.Main;
 import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
-import jdk.dynalink.Operation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,15 +33,24 @@ public class FortCreation {
 
     public void onJoin(PlayerJoinEvent e, Main main){
         System.out.println("Join event ran");
-        this.main = main;
-        PlayerManager playerManager = new PlayerManager(main, e.getPlayer().getUniqueId());
+        Bukkit.getScheduler().runTaskLater(main, () -> {
+            this.main = main;
+            PlayerManager playerManager = new PlayerManager(main, e.getPlayer().getUniqueId());
 
-        //Checks if player have a save
+            //-----------------------------------
+            //Checks if player has a saved fort
+            //-----------------------------------
+
             if (playerManager.getSoloStructerName().equals("0")){
                 System.out.println("Player doesn't have save");
-                //Creates a Solo Fort
+
+                //-----------------------------------
+                //Player doesn't have a fort | Creating a new fort
+                //-----------------------------------
+
                 CreateSoloFort(e.getPlayer().getUniqueId(), true);
             }
+        }, 2);
     }
 
     private void CreateSoloFort(UUID uuid, boolean newFort){
@@ -53,6 +62,11 @@ public class FortCreation {
         Boolean foundSpot = false;
         int amount = 0;
 
+
+        //-----------------------------------
+        //Finding Fort location
+        //-----------------------------------
+
         while (!foundSpot){
             Location location = new Location(player.getWorld(), 0, 100, main.getConfigManager().getBlocksBetweenForts()*amount);
             if (location.getBlock().getType() != Material.AIR){
@@ -63,28 +77,39 @@ public class FortCreation {
         }
 
 
-        File defaultSchematic = new File(main.getDataFolder() + File.separator + main.getConfigManager().getDefaultFortPath());
+        File defaultSchematic = new File(main.getDataFolder() + main.getConfigManager().getDefaultFortPath());
 
-        Clipboard clipboard;
+        //-----------------------------------
+        //Loading Schematic
+        //-----------------------------------
 
         ClipboardFormat format = ClipboardFormats.findByFile(defaultSchematic);
         try (ClipboardReader reader = format.getReader(new FileInputStream(defaultSchematic))){
-            clipboard = reader.read();
+            Clipboard clipboard = reader.read();
+
+            //-----------------------------------
+            //Pasting Schematic
+            //-----------------------------------
+
+            try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
+                Operation operation = new ClipboardHolder(clipboard)
+                        .createPaste(editSession)
+                        .to(BlockVector3.at(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()))
+                        .ignoreAirBlocks(true)
+                        .build();
+                Operations.complete(operation);
+            } catch (WorldEditException e) {
+                e.printStackTrace();
+            }
+
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        try (EditSession editSession = main.getWorldEdit().newEditSession(world)) {
-            com.sk89q.worldedit.function.operation.Operation operation = new ClipboardHolder(clipboard)
-                    .createPaste(editSession)
-                    .to(BlockVector3.at(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()))
-                    .build();
-            Operations.complete(operation);
-        } catch (WorldEditException e) {
-            e.printStackTrace();
-        }
+
 
         FortLocations.put(player.getUuid(), spawnLocation);
         player.teleport(spawnLocation);

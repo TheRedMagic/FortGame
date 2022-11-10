@@ -5,6 +5,7 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
@@ -18,7 +19,6 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import com.therift.fortgame.ConfigData.Database.PlayerManager;
 import com.therift.fortgame.Main;
-import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,10 +26,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.util.BoundingBox;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class FortCreation {
@@ -238,7 +238,19 @@ public class FortCreation {
             FortLocations.remove(uuid);
 
             try (EditSession session = WorldEdit.getInstance().newEditSession(region.getWorld())){
+
+                //-----------------------------------
+                //         Remove Blocks
+                //-----------------------------------
                 session.setBlocks((Region) region, BukkitAdapter.adapt(Material.AIR.createBlockData()));
+
+                //-----------------------------------
+                //      Removes Entitys
+                //-----------------------------------
+                List<? extends Entity> entities = session.getEntities(region);
+                for (Entity entity : entities){
+                    entity.remove();
+                }
             } catch (MaxChangedBlocksException e) {
                 throw new RuntimeException(e);
             }

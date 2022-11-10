@@ -142,7 +142,7 @@ public class FortCreation {
             //Pasting Schematic
             //-----------------------------------
 
-            try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
+            try (EditSession editSession = WorldEdit.getInstance().newEditSessionBuilder().world(world).fastMode(true).build()) {
                 Operation operation = new ClipboardHolder(clipboard)
                         .createPaste(editSession)
                         .to(BlockVector3.at(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()))

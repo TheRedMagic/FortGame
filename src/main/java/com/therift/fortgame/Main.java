@@ -3,6 +3,8 @@ package com.therift.fortgame;
 import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.ConfigData.Config.ConfigManager;
 import com.therift.fortgame.ConfigData.Database.Database;
+import com.therift.fortgame.Core.FortCreation.Commands.ForceDelete;
+import com.therift.fortgame.Core.FortCreation.Commands.ForceLoad;
 import com.therift.fortgame.Core.FortCreation.Commands.ForceSave;
 import com.therift.fortgame.Core.FortCreation.FortCreationListener;
 import com.therift.theriftcore.TheRiftCore;
@@ -53,7 +55,8 @@ public final class Main extends JavaPlugin {
         //          Commands
         //-----------------------------------
         getCommand("ForceSave").setExecutor(new ForceSave(this));
-
+        getCommand("ForceLoad").setExecutor(new ForceLoad(this));
+        getCommand("ForceDelete").setExecutor(new ForceDelete(this));
     }
 
     @Override

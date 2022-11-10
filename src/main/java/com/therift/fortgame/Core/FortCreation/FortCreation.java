@@ -57,6 +57,17 @@ public class FortCreation {
                 CreateSoloFort(e.getPlayer().getUniqueId(), false);
             }
         }, 2);
+
+        //-----------------------------------
+        //      Auto Saves ever hour
+        //-----------------------------------
+        Bukkit.getScheduler().runTaskTimer(main, () -> {
+            if (!FortLocations.isEmpty()){
+                for (UUID uuid : FortLocations.keySet()){
+                    saveFort(uuid, false);
+                }
+            }
+        }, 7200, 7200);
     }
 
     public void onLeave(PlayerQuitEvent e){
@@ -64,11 +75,14 @@ public class FortCreation {
         //  Checks if player has fort loaded
         //-----------------------------------
         if (FortLocations.containsKey(e.getPlayer().getUniqueId())){
-            saveFort(e.getPlayer().getUniqueId());
+            saveFort(e.getPlayer().getUniqueId(), true);
         }
     }
 
     public void CreateSoloFort(UUID uuid, boolean newFort){
+
+        if (!Bukkit.getOfflinePlayer(uuid).isOnline()){return;}
+
         Player player = Bukkit.getPlayer(uuid);
 
         World world = BukkitAdapter.adapt(player.getWorld());
@@ -150,7 +164,7 @@ public class FortCreation {
 
     }
 
-    public void saveFort(UUID uuid){
+    public void saveFort(UUID uuid, boolean delete){
 
         //-----------------------------------
         //          Default Var
@@ -185,7 +199,7 @@ public class FortCreation {
         //    Saving schematic to clipboard
         //-----------------------------------
 
-        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1);
+            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1);
 
         ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, clipboard, region.getMinimumPoint());
         forwardExtentCopy.setCopyingEntities(true);
@@ -211,10 +225,22 @@ public class FortCreation {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        FortLocations.remove(uuid);
         PlayerManager pl  = new PlayerManager(main, uuid);
-        pl.setSoloStructureName(uuid + "_fort.schem");
+        if (!pl.getSoloStructerName().equals("0")) {
+            pl.setSoloStructureName(uuid + "_fort.schem");
+        }
+
+        //-----------------------------------
+        //    Removing fort form world
+        //-----------------------------------
+        if (delete) {
+            FortLocations.remove(uuid);
+
+            EditSession editSession1 = WorldEdit.getInstance().newEditSession(region.getWorld());
+
+        }
+
+
 
     }
 

@@ -9,3 +9,9 @@ commands:
   ForceSave:
     permission: "fortgame.forcesave"
     description: "Save the giving fort"
+  ForceLoad:
+    permission: "fortgame.forceload"
+    description: "Loads the giving fort"
+  ForceDelete:
+    permission: "fortgame.forcedelete"
+    description: "delete the giving fort"

@@ -1,6 +1,7 @@
 package com.therift.fortgame.Core.FortCreation;
 
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -12,6 +13,7 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import com.therift.fortgame.ConfigData.Database.PlayerManager;
@@ -24,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.BoundingBox;
 
 import java.io.*;
 import java.util.HashMap;
@@ -226,9 +229,7 @@ public class FortCreation {
             throw new RuntimeException(e);
         }
         PlayerManager pl  = new PlayerManager(main, uuid);
-        if (!pl.getSoloStructerName().equals("0")) {
-            pl.setSoloStructureName(uuid + "_fort.schem");
-        }
+        pl.setSoloStructureName(uuid + "_fort.schem");
 
         //-----------------------------------
         //    Removing fort form world
@@ -236,7 +237,11 @@ public class FortCreation {
         if (delete) {
             FortLocations.remove(uuid);
 
-            EditSession editSession1 = WorldEdit.getInstance().newEditSession(region.getWorld());
+            try (EditSession session = WorldEdit.getInstance().newEditSession(region.getWorld())){
+                session.setBlocks((Region) region, BukkitAdapter.adapt(Material.AIR.createBlockData()));
+            } catch (MaxChangedBlocksException e) {
+                throw new RuntimeException(e);
+            }
 
         }
 

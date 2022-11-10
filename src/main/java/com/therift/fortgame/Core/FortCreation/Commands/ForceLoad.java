@@ -37,7 +37,7 @@ public class ForceLoad implements CommandExecutor {
                 //-----------------------------------
                 if (commandSender instanceof Player) {
                     Player player = (Player) commandSender;
-                    player.sendMessage(ChatColor.GREEN + "Fort saved");
+                    player.sendMessage(ChatColor.GREEN + "Fort Loaded");
                 }
             }else {
 

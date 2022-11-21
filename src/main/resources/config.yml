@@ -7,10 +7,11 @@ Password: ''
 Port: ''
 
 #-----------------------------------
-#Schematics Path
+#File Path
 #-----------------------------------
-DefaultFortPath: '/Forts/DefaultForts/defaultFort.schem'
-SoloFortPath: '/Forts/SoloForts/'
+DefaultFortPath: '/DefaultForts/defaultFort.schem'
+SoloFortPath: '/Solo/Forts/'
+SoloFortConfigPath: '/Solo/Configs/'
 
 #-----------------------------------
 #Fort Settings

@@ -3,10 +3,11 @@ package com.therift.fortgame;
 import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.ConfigData.Config.ConfigManager;
 import com.therift.fortgame.ConfigData.Database.Database;
-import com.therift.fortgame.Core.FortCreation.Commands.ForceDelete;
-import com.therift.fortgame.Core.FortCreation.Commands.ForceLoad;
-import com.therift.fortgame.Core.FortCreation.Commands.ForceSave;
+import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloDelete;
+import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloLoad;
+import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloSave;
 import com.therift.fortgame.Core.FortCreation.FortCreationListener;
+import com.therift.fortgame.Core.Multiplayer.Commands.InviteCommand;
 import com.therift.theriftcore.TheRiftCore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,9 +55,10 @@ public final class Main extends JavaPlugin {
         //-----------------------------------
         //          Commands
         //-----------------------------------
-        getCommand("ForceSave").setExecutor(new ForceSave(this));
-        getCommand("ForceLoad").setExecutor(new ForceLoad(this));
-        getCommand("ForceDelete").setExecutor(new ForceDelete(this));
+        getCommand("ForceSoloSave").setExecutor(new ForceSoloSave(this));
+        getCommand("ForceSoloLoad").setExecutor(new ForceSoloLoad(this));
+        getCommand("ForceSoloDelete").setExecutor(new ForceSoloDelete(this));
+        getCommand("Invite").setExecutor(new InviteCommand(this));
     }
 
     @Override

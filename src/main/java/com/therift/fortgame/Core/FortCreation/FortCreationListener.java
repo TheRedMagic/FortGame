@@ -2,7 +2,9 @@ package com.therift.fortgame.Core.FortCreation;
 
 import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.Main;
+import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -25,10 +27,22 @@ public class FortCreationListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
+
+        RiftPlayer player = new RiftPlayer(e.getPlayer().getUniqueId());
+
         //-----------------------------------
-        //         Loads Fort
+        //      Checks if in staff mode
         //-----------------------------------
-        fortCreation.onJoin(e, main);
+        if (!player.inStaffMode()) {
+
+            //-----------------------------------
+            //         Loads Fort
+            //-----------------------------------
+            fortCreation.onJoin(e, main);
+
+        }else {
+            player.sendMessage(ChatColor.RED + "Didn't load fort because you are in staff mode");
+        }
     }
 
     @EventHandler

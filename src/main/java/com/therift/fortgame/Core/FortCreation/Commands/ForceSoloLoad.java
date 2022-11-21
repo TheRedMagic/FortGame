@@ -9,11 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class ForceSave implements CommandExecutor {
+public class ForceSoloLoad implements CommandExecutor {
     private Main main;
-    public ForceSave(Main main){
-        this.main = main;
-    }
+    public ForceSoloLoad(Main main) {this.main = main;}
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -21,23 +19,23 @@ public class ForceSave implements CommandExecutor {
         // Checks if command has agrs
         //-----------------------------------
         if (strings.length == 1){
+
             //-----------------------------------
             // Checks if player in not null
             //-----------------------------------
             if (Bukkit.getPlayer(strings[0]) != null){
-                Player player = Bukkit.getPlayer(strings[0]);
 
                 //-----------------------------------
                 //          Runs method
                 //-----------------------------------
-                main.getFortCreationListener().getFortCreation().saveFort(player.getUniqueId(), false);
+                main.getFortCreationListener().getFortCreation().LoadSoloFort(Bukkit.getPlayer(strings[0]).getUniqueId(), false);
 
                 //-----------------------------------
                 //          Sends Message
                 //-----------------------------------
                 if (commandSender instanceof Player) {
-                    Player player1 = (Player) commandSender;
-                    player1.sendMessage(ChatColor.GREEN + "Players fort saved");
+                    Player player = (Player) commandSender;
+                    player.sendMessage(ChatColor.GREEN + "Fort Loaded");
                 }
             }else {
 

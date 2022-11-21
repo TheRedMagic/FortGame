@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import javax.security.auth.callback.CallbackHandler;
+public class ForceSoloDelete implements CommandExecutor {
 
-public class ForceLoad implements CommandExecutor {
     private Main main;
-    public ForceLoad(Main main) {this.main = main;}
-
+    public ForceSoloDelete(Main main){
+        this.main = main;
+    }
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         //-----------------------------------
@@ -30,14 +30,14 @@ public class ForceLoad implements CommandExecutor {
                 //-----------------------------------
                 //          Runs method
                 //-----------------------------------
-                main.getFortCreationListener().getFortCreation().CreateSoloFort(Bukkit.getPlayer(strings[0]).getUniqueId(), false);
+                main.getFortCreationListener().getFortCreation().saveFort(Bukkit.getOfflinePlayer(strings[0]).getUniqueId(), true);
 
                 //-----------------------------------
                 //          Sends Message
                 //-----------------------------------
                 if (commandSender instanceof Player) {
                     Player player = (Player) commandSender;
-                    player.sendMessage(ChatColor.GREEN + "Fort Loaded");
+                    player.sendMessage(ChatColor.GREEN + "Fort Deleted");
                 }
             }else {
 

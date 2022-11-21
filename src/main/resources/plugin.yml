@@ -6,12 +6,17 @@ authors: [ TheRift ]
 description: A minigame form TheRift Server
 depend: [WorldEdit, TheRiftCore]
 commands:
-  ForceSave:
-    permission: "fortgame.forcesave"
+  ForceSoloSave:
+    permission: "fortgame.forcesolosave"
     description: "Save the giving fort"
-  ForceLoad:
-    permission: "fortgame.forceload"
+  ForceSoloLoad:
+    permission: "fortgame.forcesoloload"
     description: "Loads the giving fort"
-  ForceDelete:
-    permission: "fortgame.forcedelete"
+  ForceSoloDelete:
+    permission: "fortgame.forcesolodelete"
     description: "delete the giving fort"
+  Invite:
+    permission: "fortgame.multiplayer.invite"
+    description: "invite to a multiplayer fort"
+    aliases:
+      - "inv"

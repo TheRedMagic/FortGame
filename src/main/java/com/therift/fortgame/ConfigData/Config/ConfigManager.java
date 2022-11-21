@@ -14,6 +14,7 @@ public class ConfigManager {
     //Schematics
     private String defaultPath;
     private String soloFortPath;
+    private String soloConfigPath;
 
     //Fort Settings
     private int BlocksBetweenForts;
@@ -48,6 +49,11 @@ public class ConfigManager {
         //-----------------------------------
         this.defaultPath = main.getConfig().getString("DefaultFortPath");
         this.soloFortPath = main.getConfig().getString("SoloFortPath");
+
+        //-----------------------------------
+        //           Configs
+        //-----------------------------------
+        this.soloConfigPath = main.getConfig().getString("SoloFortConfigPath");
 
 
         //-----------------------------------
@@ -97,5 +103,9 @@ public class ConfigManager {
 
     public String getSoloFortPath() {
         return soloFortPath;
+    }
+
+    public String getSoloConfigPath() {
+        return soloConfigPath;
     }
 }

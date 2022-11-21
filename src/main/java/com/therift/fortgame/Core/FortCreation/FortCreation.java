@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,13 @@ import java.util.UUID;
 public class FortCreation {
 
     private Main main;
-    private HashMap<UUID, Location> FortLocations = new HashMap<>();
+    private HashMap<UUID, Location> SoloFortLocations = new HashMap<>();
+
+
+    private List<UUID> inMultiplayerMode = new ArrayList<>();
+    private HashMap<UUID, Location> MultiplayerFortLocations = new HashMap<>();
+
+
 
     public void onJoin(PlayerJoinEvent e, Main main){
         Bukkit.getScheduler().runTaskLater(main, () -> {
@@ -51,13 +58,13 @@ public class FortCreation {
                 //Player doesn't have a fort | Creating a new fort
                 //-----------------------------------
 
-                CreateSoloFort(e.getPlayer().getUniqueId(), true);
+                LoadSoloFort(e.getPlayer().getUniqueId(), true);
             }else {
                 //-----------------------------------
                 //Player Has a save
                 //-----------------------------------
 
-                CreateSoloFort(e.getPlayer().getUniqueId(), false);
+                LoadSoloFort(e.getPlayer().getUniqueId(), false);
             }
         }, 2);
 
@@ -65,24 +72,22 @@ public class FortCreation {
         //      Auto Saves ever hour
         //-----------------------------------
         Bukkit.getScheduler().runTaskTimer(main, () -> {
-            if (!FortLocations.isEmpty()){
-                for (UUID uuid : FortLocations.keySet()){
+            if (!SoloFortLocations.isEmpty()){
+                for (UUID uuid : SoloFortLocations.keySet()){
                     saveFort(uuid, false);
                 }
             }
         }, 7200, 7200);
     }
-
     public void onLeave(PlayerQuitEvent e){
         //-----------------------------------
         //  Checks if player has fort loaded
         //-----------------------------------
-        if (FortLocations.containsKey(e.getPlayer().getUniqueId())){
+        if (SoloFortLocations.containsKey(e.getPlayer().getUniqueId())){
             saveFort(e.getPlayer().getUniqueId(), true);
         }
     }
-
-    public void CreateSoloFort(UUID uuid, boolean newFort){
+    public void LoadSoloFort(UUID uuid, boolean newFort){
 
         if (!Bukkit.getOfflinePlayer(uuid).isOnline()){return;}
 
@@ -117,6 +122,7 @@ public class FortCreation {
             File defaultSchematic = new File(main.getDataFolder() + main.getConfigManager().getDefaultFortPath());
             fortFile = defaultSchematic;
             spawnLocation.add(0, 1, 0);
+
         }else {
             File saveSchematic = new File(main.getDataFolder() + main.getConfigManager().getSoloFortPath() + uuid + "_fort.schem");
             fortFile = saveSchematic;
@@ -162,10 +168,11 @@ public class FortCreation {
 
 
 
-        FortLocations.put(uuid, spawnLocation);
+        SoloFortLocations.put(uuid, spawnLocation);
 
 
     }
+
 
     public void saveFort(UUID uuid, boolean delete){
 
@@ -176,7 +183,7 @@ public class FortCreation {
         Player player = Bukkit.getPlayer(uuid);
 
         org.bukkit.World world = player.getWorld();
-        Location FortLocation = FortLocations.get(uuid);
+        Location FortLocation = SoloFortLocations.get(uuid);
 
 
         World world1 = BukkitAdapter.adapt(world);
@@ -235,7 +242,7 @@ public class FortCreation {
         //    Removing fort form world
         //-----------------------------------
         if (delete) {
-            FortLocations.remove(uuid);
+            SoloFortLocations.remove(uuid);
 
             try (EditSession session = WorldEdit.getInstance().newEditSession(region.getWorld())){
 
@@ -245,7 +252,7 @@ public class FortCreation {
                 session.setBlocks((Region) region, BukkitAdapter.adapt(Material.AIR.createBlockData()));
 
                 //-----------------------------------
-                //      Removes Entitys
+                //      Removes Entities
                 //-----------------------------------
                 List<? extends Entity> entities = session.getEntities(region);
                 for (Entity entity : entities){

@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerManager {
@@ -15,6 +17,7 @@ public class PlayerManager {
     private UUID uuid;
     private String username;
     private String SoloStructerName;
+    private String MultiplayerStructerName;
 
 
     public PlayerManager(Main main, UUID uuid){
@@ -31,6 +34,7 @@ public class PlayerManager {
             if (rs.next()){
                 this.username = rs.getString("Username");
                 this.SoloStructerName = rs.getString("SoloStructurName");
+                this.MultiplayerStructerName = rs.getString("MultiplayerFortName");
             }else {
                 PreparedStatement preparedStatement = main.getDatabase().getConnection().prepareStatement("INSERT INTO PlayerData (UUID, Username, SoloStructurName) VALUES (?,?,?)");
                 preparedStatement.setString(1, uuid.toString());
@@ -39,6 +43,7 @@ public class PlayerManager {
                 preparedStatement.executeUpdate();
                 this.username = player.getName();
                 this.SoloStructerName = "0";
+                this.MultiplayerStructerName = "0";
             }
         }catch (SQLException e){
             throw new RuntimeException(e);
@@ -60,6 +65,37 @@ public class PlayerManager {
 
     public String getSoloStructerName() {
         return SoloStructerName;
+    }
+
+    public String getMultiplayerStructerName() {
+        return MultiplayerStructerName;
+    }
+
+    public void setMultiplayerStructerName(String multiplayerStructerName) {
+        try {
+            PreparedStatement ps = main.getDatabase().getConnection().prepareStatement("UPDATE PlayerData SET MultiplayerFortName = ? WHERE UUID = ?");
+            ps.setString(1, multiplayerStructerName);
+            ps.setString(2, uuid.toString());
+            ps.executeUpdate();
+            this.SoloStructerName = multiplayerStructerName;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+    public List<UUID> getAllInMultiPlayerGroup(){
+        PreparedStatement ps = null;
+        try {
+            ps = main.getDatabase().getConnection().prepareStatement("SELECT UUID FROM PlayerData WHERE MultiplayerFortName = ?");
+            ps.setString(1, MultiplayerStructerName);
+            ResultSet rs = ps.executeQuery();
+            List<UUID> a = new ArrayList<>();
+            while (rs.next()){
+                a.add(UUID.fromString(rs.getString("UUID")));
+            }
+            return a;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public UUID getUuid() {

@@ -8,15 +8,21 @@ import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloLoad;
 import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloSave;
 import com.therift.fortgame.Core.FortCreation.FortCreationListener;
 import com.therift.fortgame.Core.Multiplayer.Commands.InviteCommand;
+import com.therift.fortgame.Core.Multiplayer.Commands.JoinCommand;
+import com.therift.fortgame.Core.Multiplayer.MultiPlayerInviteAndJoin;
 import com.therift.theriftcore.TheRiftCore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
+    //-----------------------------------
+    //            Classes
+    //-----------------------------------
     private TheRiftCore riftCore;
     private FortCreationListener fortCreationListener;
     private WorldEdit worldEdit;
+    private MultiPlayerInviteAndJoin multiPlayerInvite;
 
     //-----------------------------------
     //          Data Var
@@ -34,7 +40,11 @@ public final class Main extends JavaPlugin {
         riftCore = (TheRiftCore) Bukkit.getPluginManager().getPlugin("TheRiftCore");
         worldEdit = WorldEdit.getInstance();
 
+        //-----------------------------------
+        //              Classes
+        //-----------------------------------
 
+        multiPlayerInvite = new MultiPlayerInviteAndJoin(this);
 
         //-----------------------------------
         //              Data
@@ -59,6 +69,7 @@ public final class Main extends JavaPlugin {
         getCommand("ForceSoloLoad").setExecutor(new ForceSoloLoad(this));
         getCommand("ForceSoloDelete").setExecutor(new ForceSoloDelete(this));
         getCommand("Invite").setExecutor(new InviteCommand(this));
+        getCommand("Join").setExecutor(new JoinCommand(this));
     }
 
     @Override
@@ -76,5 +87,9 @@ public final class Main extends JavaPlugin {
     public Database getDatabase(){return database;}
     public FortCreationListener getFortCreationListener() {
         return fortCreationListener;
+    }
+
+    public MultiPlayerInviteAndJoin getMultiPlayerInvite() {
+        return multiPlayerInvite;
     }
 }

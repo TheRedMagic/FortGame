@@ -20,3 +20,6 @@ commands:
     description: "invite to a multiplayer fort"
     aliases:
       - "inv"
+  Join:
+    permission: "fortgame.multiplayer.join"
+    description: "join player to fort"

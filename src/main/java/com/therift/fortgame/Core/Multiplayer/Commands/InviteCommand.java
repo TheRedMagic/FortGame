@@ -1,8 +1,9 @@
 package com.therift.fortgame.Core.Multiplayer.Commands;
 
-import com.therift.fortgame.Core.Multiplayer.MultiPlayerInvite;
+import com.therift.fortgame.Core.Multiplayer.MultiPlayerInviteAndJoin;
 import com.therift.fortgame.Main;
 import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,7 +25,7 @@ public class InviteCommand implements CommandExecutor {
         //-----------------------------------
         if (commandSender instanceof Player){
 
-            RiftPlayer player = new RiftPlayer(((Player) commandSender).getUniqueId());
+            Player player = (Player) commandSender;
 
             //-----------------------------------
             //  Checks if there is a player
@@ -37,7 +38,7 @@ public class InviteCommand implements CommandExecutor {
                    //-----------------------------------
                    //           Invite method
                    //-----------------------------------
-                   new MultiPlayerInvite(main).invite(player.getUuid(), player1.getUniqueId());
+                   main.getMultiPlayerInvite().invite(player.getUniqueId(), player1.getUniqueId());
 
                }else {
                    player.sendMessage(ChatColor.RED + "Can't find player");

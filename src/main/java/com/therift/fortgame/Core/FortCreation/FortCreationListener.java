@@ -30,19 +30,14 @@ public class FortCreationListener implements Listener {
 
         RiftPlayer player = new RiftPlayer(e.getPlayer().getUniqueId());
 
-        //-----------------------------------
-        //      Checks if in staff mode
-        //-----------------------------------
-        if (!player.inStaffMode()) {
 
-            //-----------------------------------
-            //         Loads Fort
-            //-----------------------------------
-            fortCreation.onJoin(e, main);
 
-        }else {
-            player.sendMessage(ChatColor.RED + "Didn't load fort because you are in staff mode");
-        }
+        //-----------------------------------
+        //         Loads Fort
+        //-----------------------------------
+        fortCreation.onJoin(e, main);
+
+
     }
 
     @EventHandler

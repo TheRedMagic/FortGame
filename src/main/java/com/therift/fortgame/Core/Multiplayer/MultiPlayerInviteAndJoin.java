@@ -59,7 +59,7 @@ public class MultiPlayerInviteAndJoin {
             if (invitedMap.containsKey(invited)){
                 invitedMap.remove(invited);
             }
-        }, 600);
+        }, 6000);
 
         //-----------------------------------
         //        TextComponents
@@ -121,15 +121,16 @@ public class MultiPlayerInviteAndJoin {
 
                 InvitedPm.setMultiplayerStructerName(InvitingPm.getMultiplayerStructerName());
 
+
                 //-----------------------------------
                 //           Sends Messages
                 //-----------------------------------
                 invitedPlayer.getPlayer().sendMessage(ChatColor.GRAY + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n" +
-                        ChatColor.GREEN + invitedPlayer.getName() + " has join the fort" +
+                        ChatColor.GREEN + invitedPlayer.getName() + " has join the fort\n" +
                         ChatColor.GRAY + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
                 invitingPlayer.getPlayer().sendMessage(ChatColor.GRAY + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n" +
-                        ChatColor.GREEN + " you have joined the fort" +
+                        ChatColor.GREEN + "You have joined the fort'n" +
                         ChatColor.GRAY + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
             }else {

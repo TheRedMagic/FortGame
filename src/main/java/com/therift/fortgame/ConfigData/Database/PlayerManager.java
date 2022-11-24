@@ -71,13 +71,13 @@ public class PlayerManager {
         return MultiplayerStructerName;
     }
 
-    public void setMultiplayerStructerName(String multiplayerStructerName) {
+    public void setMultiplayerStructerName(String multiplayerStructerNameChange) {
         try {
             PreparedStatement ps = main.getDatabase().getConnection().prepareStatement("UPDATE PlayerData SET MultiplayerFortName = ? WHERE UUID = ?");
-            ps.setString(1, multiplayerStructerName);
+            ps.setString(1, multiplayerStructerNameChange);
             ps.setString(2, uuid.toString());
             ps.executeUpdate();
-            this.SoloStructerName = multiplayerStructerName;
+            this.MultiplayerStructerName = multiplayerStructerNameChange;
         }catch (SQLException e){
             throw new RuntimeException(e);
         }

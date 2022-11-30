@@ -12,7 +12,6 @@ import com.therift.fortgame.Core.Multiplayer.Commands.InviteCommand;
 import com.therift.fortgame.Core.Multiplayer.Commands.JoinCommand;
 import com.therift.fortgame.Core.Multiplayer.MultiPlayerInviteAndJoin;
 import com.therift.fortgame.Util.UtilManager;
-import com.therift.theriftcore.TheRiftCore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,7 +20,6 @@ public final class Main extends JavaPlugin {
     //-----------------------------------
     //            Classes
     //-----------------------------------
-    private TheRiftCore riftCore;
     private FortCreationListener fortCreationListener;
     private WorldEdit worldEdit;
     private MultiPlayerInviteAndJoin multiPlayerInvite;
@@ -41,7 +39,6 @@ public final class Main extends JavaPlugin {
         //              API's
         //-----------------------------------
 
-        riftCore = (TheRiftCore) Bukkit.getPluginManager().getPlugin("TheRiftCore");
         worldEdit = WorldEdit.getInstance();
 
         //-----------------------------------

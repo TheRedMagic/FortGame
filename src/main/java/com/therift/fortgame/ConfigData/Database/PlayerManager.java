@@ -1,7 +1,6 @@
 package com.therift.fortgame.ConfigData.Database;
 
 import com.therift.fortgame.Main;
-import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

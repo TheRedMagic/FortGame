@@ -2,7 +2,7 @@ package com.therift.fortgame.Core.FortCreation;
 
 import com.sk89q.worldedit.WorldEdit;
 import com.therift.fortgame.Main;
-import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -27,10 +27,6 @@ public class FortCreationListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
-
-        RiftPlayer player = new RiftPlayer(e.getPlayer().getUniqueId());
-
-
 
         //-----------------------------------
         //         Loads Fort

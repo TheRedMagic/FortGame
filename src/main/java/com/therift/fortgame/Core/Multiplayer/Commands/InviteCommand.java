@@ -2,7 +2,7 @@ package com.therift.fortgame.Core.Multiplayer.Commands;
 
 import com.therift.fortgame.Core.Multiplayer.MultiPlayerInviteAndJoin;
 import com.therift.fortgame.Main;
-import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
+
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

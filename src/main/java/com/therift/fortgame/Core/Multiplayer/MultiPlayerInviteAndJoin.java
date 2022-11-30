@@ -2,7 +2,7 @@ package com.therift.fortgame.Core.Multiplayer;
 
 import com.therift.fortgame.ConfigData.Database.PlayerManager;
 import com.therift.fortgame.Main;
-import com.therift.theriftcore.Database.DatabaseManager.RiftPlayer;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;

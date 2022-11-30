@@ -7,9 +7,11 @@ import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloDelete;
 import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloLoad;
 import com.therift.fortgame.Core.FortCreation.Commands.ForceSoloSave;
 import com.therift.fortgame.Core.FortCreation.FortCreationListener;
+import com.therift.fortgame.Core.Menus.MenuManager;
 import com.therift.fortgame.Core.Multiplayer.Commands.InviteCommand;
 import com.therift.fortgame.Core.Multiplayer.Commands.JoinCommand;
 import com.therift.fortgame.Core.Multiplayer.MultiPlayerInviteAndJoin;
+import com.therift.fortgame.Util.UtilManager;
 import com.therift.theriftcore.TheRiftCore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +25,8 @@ public final class Main extends JavaPlugin {
     private FortCreationListener fortCreationListener;
     private WorldEdit worldEdit;
     private MultiPlayerInviteAndJoin multiPlayerInvite;
+    private MenuManager menuManager;
+    private UtilManager utilManager;
 
     //-----------------------------------
     //          Data Var
@@ -45,6 +49,8 @@ public final class Main extends JavaPlugin {
         //-----------------------------------
 
         multiPlayerInvite = new MultiPlayerInviteAndJoin(this);
+        menuManager = new MenuManager(this);
+        utilManager = new UtilManager();
 
         //-----------------------------------
         //              Data
@@ -52,8 +58,6 @@ public final class Main extends JavaPlugin {
 
         config = new ConfigManager(this);
         database = new Database(this);
-
-
 
         //-----------------------------------
         //              Listener
@@ -83,13 +87,21 @@ public final class Main extends JavaPlugin {
         }
     }
 
+    //-----------------------------------
+    //      Class Getters
+    //-----------------------------------
     public ConfigManager getConfigManager(){return config;}
     public Database getDatabase(){return database;}
     public FortCreationListener getFortCreationListener() {
         return fortCreationListener;
     }
-
     public MultiPlayerInviteAndJoin getMultiPlayerInvite() {
         return multiPlayerInvite;
+    }
+    public MenuManager getMenuManager() {
+        return menuManager;
+    }
+    public UtilManager getUtilManager() {
+        return utilManager;
     }
 }

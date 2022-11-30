@@ -89,8 +89,14 @@ public class FortCreation {
     }
     public void LoadSoloFort(UUID uuid, boolean newFort){
 
+        //-----------------------------------
+        //    Checks if player is online
+        //-----------------------------------
         if (!Bukkit.getOfflinePlayer(uuid).isOnline()){return;}
 
+        //-----------------------------------
+        //          Default Vars
+        //-----------------------------------
         Player player = Bukkit.getPlayer(uuid);
 
         World world = BukkitAdapter.adapt(player.getWorld());
@@ -98,6 +104,13 @@ public class FortCreation {
         Location spawnLocation = new Location(player.getWorld(), 0, 0, 10000);
         Boolean foundSpot = false;
         int amount = 0;
+
+        //-----------------------------------
+        //Checks if player doesn't have a loaded fort
+        //-----------------------------------
+        if (SoloFortLocations.containsKey(player.getUniqueId())){
+            saveFort(player.getUniqueId(), true);
+        }
 
 
         //-----------------------------------
